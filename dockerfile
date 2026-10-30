@@ -1,27 +1,24 @@
 # Etapa 1: Build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
-# Copiar archivos del proyecto
 COPY . .
 
-# Restaurar dependencias
-RUN dotnet restore
+RUN dotnet restore Trazent.Api.slnx
 
-# Compilar y publicar
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish Trazent.Api/Trazent.Api.csproj \
+    --configuration Release \
+    --output /app/publish \
+    --no-restore
 
 # Etapa 2: Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 
 WORKDIR /app
 
 COPY --from=build /app/publish .
 
-# Puerto dinámico de Render
-ENV ASPNETCORE_URLS=http://+:${PORT:-8080}
-
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "TuProyecto.dll"]
+CMD ["sh", "-c", "dotnet Trazent.Api.dll --urls http://+:${PORT:-8080}"]
