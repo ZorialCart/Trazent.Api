@@ -14,7 +14,7 @@ namespace Trazent.Api.Core.Implementations.Repositories
     public class CompaniesRepository : ICompaniesRepository
     {
         private readonly ILogger<CompaniesRepository> _logger;
-        private readonly IAppDbContext _appDbContext;         
+        private readonly IAppDbContext _appDbContext;
 
         public CompaniesRepository(
             ILogger<CompaniesRepository> logger,
@@ -24,7 +24,37 @@ namespace Trazent.Api.Core.Implementations.Repositories
             _appDbContext = appDbContext;
         }
 
-        public async Task <List<Companies>> GetAlltCompaniesAsync()
+        public async Task<string> CreateCompanyAsync(Companies company)
+        {
+            if (_appDbContext.Connection == null)
+                throw new InvalidOperationException("Connection not initialized.");
+
+            const string sql = "create_company";
+
+
+            try
+            {
+
+                await using var command = new NpgsqlCommand(sql, _appDbContext.Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                command.Parameters.AddWithValue("p_name");
+                command.Parameters.AddWithValue("p_plan", (byte)company.Plan);
+
+                var result = await command.ExecuteScalarAsync();
+                return Convert.ToString(result);
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception($"Error creating company: {ex.Message}", ex);
+
+            }
+        }
+
+    public async Task <List<Companies>> GetAlltCompaniesAsync()
         {
             if (_appDbContext.Connection == null)
                 throw new InvalidOperationException("Connection not initialized.");

@@ -11,5 +11,7 @@ namespace Trazent.Api.Core.Infraestructure.Repositories
         Task UpdateCompaniesAsync(Companies company);
         Task<Companies> GetCompanyById(Guid id, bool? isActive = true);
         Task<bool> ChangeIsActiveByIdAsync(Guid id);
+        Task<string> CreateCompanyAsync(Companies company);
+
     }
 }

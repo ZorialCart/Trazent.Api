@@ -22,6 +22,26 @@ namespace Trazent.Api.Core.Implementations.Services
             _coreUnitRepositories = coreUnitRepositories;
         }
 
+        public async Task<IResult<Companies>>CreateCompanyAsync(Companies company)
+        {
+            try
+            {
+                await _dbContext.EnsureConnectionAsync();
+
+                await _dbContext.ExecuteInTransactionAsync(async () =>
+                {
+                    string newId = await _coreUnitRepositories
+                      .CompaniesRepository
+                      .CreateCompanyAsync(company);
+                });
+                return Result.Success(company);
+            }
+            catch(ApiException ex)
+            {
+                return Result.Failed<Companies>(ex.ToError());
+            }
+        }
+
         public async Task<IResult<List<Companies>>> GetAllComaniesAsync()
         {
             try

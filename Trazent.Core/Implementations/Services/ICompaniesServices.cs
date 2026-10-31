@@ -8,6 +8,7 @@ namespace Trazent.Core.Implementations.Services
 {
     public interface ICompaniesServices
     {
+        Task<IResult<Companies>> CreateCompanyAsync(Companies company);
         Task<IResult<List<Companies>>> GetAllComaniesAsync();
         Task<IResult<Companies>> UpdateCompanyAsync(Companies company); 
         Task<IResult<Companies>> GetCompanyById(Guid id, bool? isActive = true);

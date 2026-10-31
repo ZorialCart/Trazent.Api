@@ -18,6 +18,16 @@ namespace Trazent.Api.Controllers
             _services = services;
         }
 
+        [Mutation("createCompanyAsync", typeof(CompaniesType)]
+        public Task<IGraphActionResult> CreateCompanyAsync(CompaniesInputType company) =>
+            ValidateInputModel(() =>
+            {
+                var model = Mapper.Map<Companies>(company);
+                return _services
+                .CreateCompanyAsync(model)
+                .MapAsync(Resolve);
+            });
+
         [Query("GetAllCompaniesAsync", typeof(List<CompaniesType>))]
         public Task<IGraphActionResult> GetAllCompaniesAsync() =>
             ValidateInputModel(() =>
