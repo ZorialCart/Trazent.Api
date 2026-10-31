@@ -18,7 +18,7 @@ namespace Trazent.Api.Controllers
             _services = services;
         }
 
-        [Mutation("createCompanyAsync", typeof(CompaniesType)]
+        [Mutation("createCompanyAsync", typeof(CompaniesType))]
         public Task<IGraphActionResult> CreateCompanyAsync(CompaniesInputType company) =>
             ValidateInputModel(() =>
             {
