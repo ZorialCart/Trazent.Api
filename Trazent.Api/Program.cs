@@ -15,6 +15,12 @@ builder.Services.AddSingleton<IDatabaseConnection, DatabaseConnection>();
 builder.Services.AddCoreServices();
 builder.Services.AddAutoMapper(configuration =>
     configuration.AddMaps(typeof(CompaniesMappingProfile).Assembly));
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
+        policy
+            .WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [])
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
 
 // Add services to the container.
 
@@ -44,6 +50,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseCors();
 
 app.UseGraphQLGraphiQL("/ui/playground");
 
