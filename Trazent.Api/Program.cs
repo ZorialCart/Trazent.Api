@@ -26,15 +26,6 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("Pwa", policy =>
-        policy.WithOrigins(
-                "http://localhost:5500") // development
-            .WithMethods("POST")
-            .WithHeaders("Content-Type", "Accept"));
-});
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -58,8 +49,6 @@ app.UseGraphQLGraphiQL("/ui/playground");
 app.UseGraphQL();
 
 app.UseHttpsRedirection();
-
-app.UseCors("Pwa");
 
 app.UseAuthorization();
 
