@@ -15,19 +15,16 @@ builder.Services.AddSingleton<IDatabaseConnection, DatabaseConnection>();
 builder.Services.AddCoreServices();
 builder.Services.AddAutoMapper(configuration =>
     configuration.AddMaps(typeof(CompaniesMappingProfile).Assembly));
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
+        policy
+            .WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [])
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("Pwa", policy =>
-        policy.WithOrigins(
-                "http://localhost:5500") // development
-            .WithMethods("POST")
-            .WithHeaders("Content-Type", "Accept"));
-});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -45,13 +42,13 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseCors();
+
 app.UseGraphQLGraphiQL("/ui/playground");
 
 app.UseGraphQL();
 
 app.UseHttpsRedirection();
-
-app.UseCors("Pwa");
 
 app.UseAuthorization();
 
