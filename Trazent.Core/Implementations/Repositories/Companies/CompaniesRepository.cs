@@ -40,7 +40,7 @@ namespace Trazent.Api.Core.Implementations.Repositories
                     CommandType = CommandType.StoredProcedure
                 };
 
-                command.Parameters.AddWithValue("p_name");
+                command.Parameters.AddWithValue("p_name", company.Name);
                 command.Parameters.AddWithValue("p_plan", (byte)company.Plan);
 
                 var result = await command.ExecuteScalarAsync();
