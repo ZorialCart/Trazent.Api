@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Trazent.Api.DataAccess
 {
-    public class AppDbContext : IAppDbContext
+    public class AppDbContext : IAppDbContext, IAsyncDisposable
     {
         private readonly IDatabaseConnection _connection;
         private readonly ILogger<AppDbContext> _logger;
@@ -29,7 +29,7 @@ namespace Trazent.Api.DataAccess
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error during create connection.");
+                _logger.LogError(ex, "Error during create connection.");
                 throw;
             }
         }
@@ -66,6 +66,15 @@ namespace Trazent.Api.DataAccess
                 throw;
             }
 
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (Connection is not null)
+            {
+                await Connection.DisposeAsync();
+                Connection = default!;
+            }
         }
     }
 }

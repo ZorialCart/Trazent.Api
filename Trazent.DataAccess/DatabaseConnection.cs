@@ -20,26 +20,34 @@ namespace Trazent.Api.DataAccess
 
         public async Task<NpgsqlConnection> CreateConnectionAsync(CancellationToken cancellationToken)
         {
+            NpgsqlConnection? connection = null;
             try
             {
-                var connection = new NpgsqlConnection(_connectionString);
+                connection = new NpgsqlConnection(_connectionString);
                 await connection.OpenAsync(cancellationToken);
 
                 _logger.LogInformation("Database connection established successfully.");
                 return connection;
             }
-            catch (NpgsqlException ex)
-            {
-                _logger.LogError(ex, "Database connection failed. NpgsqlException: {Message}", ex.Message);
-                throw new DatabaseConnectionException("Failed to connect to the database.", ex);
-            }
-            catch (TimeoutException ex)
-            {
-                _logger.LogError(ex, "Database connection timed out.");
-                throw new DatabaseConnectionException("Database connection timed out.", ex);
-            }
             catch (Exception ex)
             {
+                if (connection is not null)
+                {
+                    await connection.DisposeAsync();
+                }
+
+                if (ex is NpgsqlException)
+                {
+                    _logger.LogError(ex, "Database connection failed. NpgsqlException: {Message}", ex.Message);
+                    throw new DatabaseConnectionException("Failed to connect to the database.", ex);
+                }
+
+                if (ex is TimeoutException)
+                {
+                    _logger.LogError(ex, "Database connection timed out.");
+                    throw new DatabaseConnectionException("Database connection timed out.", ex);
+                }
+
                 _logger.LogError(ex, "Unexpected error when connecting to the database.");
                 throw new DatabaseConnectionException("Unexpected database connection error.", ex);
             }
