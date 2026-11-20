@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Trazent.DataAccess\Trazent.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Implementations\Repositories\Contractors\" />
+  </ItemGroup>
+
 </Project>

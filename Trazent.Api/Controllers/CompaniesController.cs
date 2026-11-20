@@ -2,7 +2,7 @@
 using GraphQL.AspNet.Attributes;
 using GraphQL.AspNet.Interfaces.Controllers;
 using Trazent.Api.GraphQL.Types.CompaniesType;
-using Trazent.Core.Implementations.Services;
+using Trazent.Core.Infraestructure.Services;
 using Trazent.Infraestructure.Common.Entities;
 using Trazent.Infraestructure.Common.Extensions;
 
@@ -17,8 +17,8 @@ namespace Trazent.Api.Controllers
         {
             _services = services;
         }
-
-        [Mutation("createCompanyAsync", typeof(CompaniesType))]
+        
+        [Mutation("CreateCompanyAsync", typeof(CompaniesType))]
         public Task<IGraphActionResult> CreateCompanyAsync(CompaniesInputType company) =>
             ValidateInputModel(() =>
             {
@@ -37,6 +37,16 @@ namespace Trazent.Api.Controllers
                 .MapAsync(Resolve);
 
             });
+
+        [Query("GetCompanyByIdAsync", typeof(CompaniesType))]
+        public Task<IGraphActionResult> GetCompanyByIdAsync(Guid id) =>
+            ValidateInputModel(() =>
+            {
+                return _services
+                .GetCompanyById(id)
+                .MapAsync(Resolve);
+            });
+
 
         [Mutation("UpdateCompanyAsync", typeof(CompaniesType))]
         public Task<IGraphActionResult> UpdateCompanyAsync(CompaniesInputType company) =>

@@ -10,19 +10,19 @@ namespace Trazent.Infraestructure.Common.Entities
     {
         public Guid Id { get; set; }
 
-        public Companies Company { get; set; }
+        public Companies? Company { get; set; }
         public string FullName { get; set; }
-        public RoleTypeEnum Role { get; set; }
+        public RoleTypeEnum? Role { get; set; }
         public StatusTypeEnum Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public string SecurityStamp { get; set; }
-        public string ConcurrencyStamp { get; set; }
-        public string PhoneNumber { get; set; }
-        public string LockoutEnd { get; set; }
+        public DateTime SecurityStamp { get; set; }
+        public DateTime ConcurrencyStamp { get; set; }
+        public string? PhoneNumber { get; set; }
+        public DateTime LockoutEnd { get; set; }
         public int AccessFailedCount { get; set; }
         public DateTime CreatedAd { get; set; }
         public DateTime UpdatedAt { get; set; }
