@@ -12,7 +12,7 @@ System.AppContext.SetSwitch(
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IDatabaseConnection, DatabaseConnection>();
-builder.Services.AddCoreServices();
+builder.Services.RegisterCoreServices();
 builder.Services.AddAutoMapper(configuration =>
     configuration.AddMaps(typeof(CompaniesMappingProfile).Assembly));
 builder.Services.AddCors(options =>
@@ -55,3 +55,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
